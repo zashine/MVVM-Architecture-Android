@@ -9,6 +9,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import me.amitshekhar.mvvm.MVVMApplication
 import me.amitshekhar.mvvm.data.model.Article
@@ -17,6 +20,8 @@ import me.amitshekhar.mvvm.di.component.DaggerActivityComponent
 import me.amitshekhar.mvvm.di.module.ActivityModule
 import me.amitshekhar.mvvm.ui.base.UiState
 import javax.inject.Inject
+import kotlin.coroutines.EmptyCoroutineContext
+import kotlin.random.Random
 
 class TopHeadlineActivity : AppCompatActivity() {
 
@@ -73,6 +78,10 @@ class TopHeadlineActivity : AppCompatActivity() {
                 }
             }
         }
+
+        topHeadlineViewModel.publicData.observe(this) {
+            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun renderList(articleList: List<Article>) {
@@ -80,10 +89,27 @@ class TopHeadlineActivity : AppCompatActivity() {
         adapter.notifyDataSetChanged()
     }
 
+    /**
+     * 这段代码使用 Dagger 依赖注入框架，它的作用是：
+     *
+     * 创建 DaggerActivityComponent 实例：
+     *
+     * DaggerActivityComponent.builder()：创建一个 DaggerActivityComponent 的构建器。
+     * .applicationComponent((application as MVVMApplication).applicationComponent)：将应用程序级别的组件（applicationComponent）作为依赖提供给 DaggerActivityComponent。这通常用于提供应用程序范围的单例实例，例如网络请求库、数据库等。
+     * .activityModule(ActivityModule(this))：使用 ActivityModule 为 DaggerActivityComponent 提供 Activity 级别的依赖。ActivityModule 负责创建 Activity 相关的实例，例如 Presenter、ViewModel 等。
+     * .build()：构建 DaggerActivityComponent 实例。
+     * 执行注入：
+     *
+     * .inject(this)：将 DaggerActivityComponent 的实例注入到当前的 Activity 中。这意味着 Dagger 会查找 Activity 中使用 @Inject 注解标记的成员变量，并使用 DaggerActivityComponent 中提供的依赖来初始化它们。
+     * 总结：
+     * 这段代码的目的是使用 Dagger 框架，通过依赖注入的方式来初始化 Activity 中所需的成员变量。DaggerActivityComponent 作为一个桥梁，连接了应用程序级别的依赖、Activity 级别的依赖和需要注入的 Activity。
+     */
     private fun injectDependencies() {
         DaggerActivityComponent.builder()
             .applicationComponent((application as MVVMApplication).applicationComponent)
-            .activityModule(ActivityModule(this)).build().inject(this)
+            .activityModule(ActivityModule(this))
+            .build()
+            .inject(this)
     }
 
 }

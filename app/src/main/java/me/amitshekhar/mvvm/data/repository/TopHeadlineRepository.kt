@@ -19,4 +19,11 @@ class TopHeadlineRepository @Inject constructor(private val networkService: Netw
         }
     }
 
+    fun getTopHeadlinesWithoutParam(): Flow<List<Article>> {
+        return flow {
+            emit(networkService.getTopHeadlines2())
+        }.map {
+            it.articles
+        }
+    }
 }
