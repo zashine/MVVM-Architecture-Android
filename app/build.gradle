@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
+    id 'com.google.dagger.hilt.android'
 }
 
 android {
@@ -54,7 +55,9 @@ dependencies {
     kapt "com.google.dagger:dagger-compiler:2.54"
     implementation 'androidx.browser:browser:1.8.0'
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0") // 使用最新版本，或指定其他版本
-
+    // hilt
+    implementation 'com.google.dagger:hilt-android:2.51.1'
+    kapt 'com.google.dagger:hilt-android-compiler:2.51.1'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
