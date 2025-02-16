@@ -3,9 +3,11 @@ package me.amitshekhar.mvvm.di.module
 import android.content.Context
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import me.amitshekhar.mvvm.MVVMApplication
 import me.amitshekhar.mvvm.data.api.NetworkService
-import me.amitshekhar.mvvm.di.ApplicationContext
+import dagger.hilt.android.qualifiers.ApplicationContext
 import me.amitshekhar.mvvm.di.BaseUrl
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -14,11 +16,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
-class ApplicationModule(private val application: MVVMApplication) {
+@InstallIn(SingletonComponent::class)
+object ApplicationModule {
 
-    @ApplicationContext
     @Provides
-    fun provideContext(): Context {
+    @ApplicationContext
+    fun provideContext(application: MVVMApplication): Context { // Inject application
         return application
     }
 

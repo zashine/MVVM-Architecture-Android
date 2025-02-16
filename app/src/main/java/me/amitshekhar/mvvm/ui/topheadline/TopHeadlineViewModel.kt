@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -11,9 +12,13 @@ import kotlinx.coroutines.launch
 import me.amitshekhar.mvvm.data.model.Article
 import me.amitshekhar.mvvm.data.repository.TopHeadlineRepository
 import me.amitshekhar.mvvm.ui.base.UiState
+import javax.inject.Inject
 import kotlin.random.Random
 
-class TopHeadlineViewModel(private val topHeadlineRepository: TopHeadlineRepository) : ViewModel() {
+@HiltViewModel
+class TopHeadlineViewModel @Inject constructor(
+    private val topHeadlineRepository: TopHeadlineRepository
+) : ViewModel() {
 
     /**
      * 个人理解：

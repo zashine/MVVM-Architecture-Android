@@ -3,30 +3,25 @@ package me.amitshekhar.mvvm.ui.topheadline
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import me.amitshekhar.mvvm.MVVMApplication
 import me.amitshekhar.mvvm.data.model.Article
 import me.amitshekhar.mvvm.databinding.ActivityTopHeadlineBinding
-import me.amitshekhar.mvvm.di.component.DaggerActivityComponent
-import me.amitshekhar.mvvm.di.module.ActivityModule
 import me.amitshekhar.mvvm.ui.base.UiState
 import javax.inject.Inject
-import kotlin.coroutines.EmptyCoroutineContext
-import kotlin.random.Random
 
+@AndroidEntryPoint
 class TopHeadlineActivity : AppCompatActivity() {
 
-    @Inject
-    lateinit var topHeadlineViewModel: TopHeadlineViewModel
+    // 使用 by viewModels() 委托
+    private val topHeadlineViewModel: TopHeadlineViewModel by viewModels()
 
     @Inject
     lateinit var adapter: TopHeadlineAdapter
@@ -34,7 +29,6 @@ class TopHeadlineActivity : AppCompatActivity() {
     private lateinit var binding: ActivityTopHeadlineBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        injectDependencies()
         super.onCreate(savedInstanceState)
         binding = ActivityTopHeadlineBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -64,10 +58,12 @@ class TopHeadlineActivity : AppCompatActivity() {
                             renderList(it.data)
                             binding.recyclerView.visibility = View.VISIBLE
                         }
+
                         is UiState.Loading -> {
                             binding.progressBar.visibility = View.VISIBLE
                             binding.recyclerView.visibility = View.GONE
                         }
+
                         is UiState.Error -> {
                             //Handle Error
                             binding.progressBar.visibility = View.GONE
@@ -104,12 +100,12 @@ class TopHeadlineActivity : AppCompatActivity() {
      * 总结：
      * 这段代码的目的是使用 Dagger 框架，通过依赖注入的方式来初始化 Activity 中所需的成员变量。DaggerActivityComponent 作为一个桥梁，连接了应用程序级别的依赖、Activity 级别的依赖和需要注入的 Activity。
      */
-    private fun injectDependencies() {
+    /*private fun injectDependencies() {
         DaggerActivityComponent.builder()
             .applicationComponent((application as MVVMApplication).applicationComponent)
             .activityModule(ActivityModule(this))
             .build()
             .inject(this)
-    }
+    }*/
 
 }
