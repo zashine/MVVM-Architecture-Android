@@ -6,6 +6,7 @@ import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Query
 import javax.inject.Singleton
+import retrofit2.Response
 
 @Singleton
 interface NetworkService {
@@ -20,4 +21,11 @@ interface NetworkService {
         @Query("apikey") apikey: String = AppConstant.API_KEY,
         @Query("country") country: String = AppConstant.COUNTRY
     ): TopHeadlinesResponse
+
+    @GET("top-headlines")
+    suspend fun getTopHeadlines3(
+        @Query("language") language: String = AppConstant.LANGUAGE,
+        @Query("apikey") apikey: String = AppConstant.API_KEY,
+        @Query("country") country: String = AppConstant.COUNTRY
+    ): Response<TopHeadlinesResponse>
 }
